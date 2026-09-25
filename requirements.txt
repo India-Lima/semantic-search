@@ -1,0 +1,18 @@
+# CPU-сборка torch (без CUDA, ~200 МБ вместо ~2 ГБ)
+--extra-index-url https://download.pytorch.org/whl/cpu
+numpy==2.4.6
+pandas==3.0.6
+pyarrow==25.0.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+seaborn==0.13.2
+torch==2.14.0+cpu
+sentence-transformers==6.1.0
+transformers==5.17.0
+tqdm==4.70.1
+boto3==1.43.102
+python-dotenv==1.2.3
+mlflow==3.16.1
+streamlit==1.64.0
+ipykernel==7.3.0
+ipywidgets==8.1.9
