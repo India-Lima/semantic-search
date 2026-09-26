@@ -38,7 +38,7 @@ MVP поисковой системы для каталога одежды и о
 
 **1. Окружение**
 ```bash
-git clone git@ds-practicum.gitlab.yandexcloud.net:s2004009/semantic-search.git
+git clone https://github.com/India-Lima/semantic-search.git
 cd semantic-search
 python3.11 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
