@@ -27,7 +27,7 @@ SPECIAL_RE = re.compile(r'[^\w\s.,:;!?()\-–—«»"\'/%+№*°]')
 
 def clean_text(text: str) -> str:
     """Та же очистка, что для каталога в ноутбуке."""
-    text = html.unescape(text)
+    text = html.unescape(text).replace("ё", "е").replace("Ё", "Е")
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"[“”„]", '"', text)
     text = SPECIAL_RE.sub(" ", text)
@@ -60,11 +60,14 @@ def search(query: str, top_k: int, w_sem: float) -> pd.DataFrame:
     lex = (tfidf @ vectorizer.transform([query]).T).toarray().ravel()
     sem = emb @ load_model().encode(QUERY_PREFIX + query, normalize_embeddings=True)
 
+    # При равных скорах порядок - по возрастанию imt_id, как в ноутбуке
+    ids = catalog["imt_id"].to_numpy()
     scores = {}
     for weight, engine_scores in ((1 - w_sem, lex), (w_sem, sem)):
-        for rank, idx in enumerate(np.argsort(-engine_scores)[:N_CANDIDATES], 1):
+        ranked = np.lexsort((ids, -engine_scores))[:N_CANDIDATES]
+        for rank, idx in enumerate(ranked, 1):
             scores[idx] = scores.get(idx, 0) + weight / (RRF_K + rank)
-    top = sorted(scores, key=scores.get, reverse=True)[:top_k]
+    top = sorted(scores, key=lambda i: (-scores[i], ids[i]))[:top_k]
     return catalog.iloc[top].assign(similarity=sem[top])
 
 
